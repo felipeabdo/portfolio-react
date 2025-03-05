@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWhatsapp } from '@fortawesome/free-brands-svg-icons'; // Importe o ícone do WhatsApp
 import '../assets/styles/pages/contact.scss';
 
 const Contact = () => {
@@ -27,7 +29,7 @@ const Contact = () => {
           <h5>Telefone</h5>
           <a href="https://contate.me/felipeabdo" target="_blank" rel="noopener noreferrer">
             <p>
-              <i className="fa-brands fa-whatsapp" style={{ color: '#16c539', marginRight: '5px' }}></i>
+              <FontAwesomeIcon icon={faWhatsapp} style={{ color: '#16c539', marginRight: '5px' }} />
               (61) 98629-6622
             </p>
           </a>
