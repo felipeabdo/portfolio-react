@@ -4,7 +4,7 @@ import './assets/styles/index.scss';
 
 const App = () => {
   return (
-    <div>
+    <div className="root">
       <Home />
     </div>
   );

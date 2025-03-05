@@ -355,6 +355,14 @@
 }
 
 @media (max-width: 550px) {
+  .root {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+  }
+  #root {
+    width: 100%;
+  }
   body {
     width: 238px;
     margin: 0 auto;
@@ -419,6 +427,7 @@
   .content {
     width: 233px;
     margin-left: 80px;
+    margin-top: 50px;
   }
 
 
@@ -512,6 +521,10 @@
 
   li h4 {
     display: none;
+  }
+
+  .sn-box a {
+    color: #fff;
   }
 
   li.sn-box:not(:last-child) {
