@@ -80,11 +80,11 @@ Favicon que muda automaticamente com base no tema do sistema (claro/escuro).
 
 Desktop
 
-![Desktop image](/assets/images/screenshot/desktop.png)
+![Desktop image](src/assets/images/screenshot/desktop.png)
 
 Mobile
 
-![Mobile image](/assets/images/screenshot/mobile.png)
+![Mobile image](src/assets/images/screenshot/mobile.png)
 
 
 
