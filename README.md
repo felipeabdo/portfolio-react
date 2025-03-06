@@ -84,7 +84,7 @@ Desktop
 
 Mobile
 
-![Mobile image](/assets/images/screenshot/desktop.png)
+![Mobile image](/assets/images/screenshot/mobile.png)
 
 
 
