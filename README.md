@@ -46,6 +46,7 @@ http://localhost:3000
 
 **Aqui está uma visão geral da estrutura do projeto:**
 
+```
 portifolio-react/
 ├── public/                  # Arquivos estáticos (favicon, manifest.json, etc.)
 ├── src/                     # Código-fonte do projeto
@@ -57,6 +58,8 @@ portifolio-react/
 │   └── index.css            # Estilos globais
 ├── package.json             # Dependências e scripts
 └── README.md                # Este arquivo
+```
+
 
 **🎨 FUNCIONALIDADES**
 
