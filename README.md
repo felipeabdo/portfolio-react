@@ -1,130 +1,187 @@
-##  **Portfólio - Felipe Barroso Abdo**
+# Felipe Barroso Abdo — Portfólio
 
-Bem-vindo ao meu portfólio pessoal! Este projeto foi desenvolvido para mostrar minhas habilidades, experiências e projetos como desenvolvedor web. Ele foi criado usando React e SCSS, com um design responsivo que se adapta a diferentes dispositivos.
+Desenvolvedor web em formação, com experiência anterior em comunicação, design e direção de arte. Gosto de unir essas áreas: entender o que precisa ser resolvido, pensar na experiência de quem vai usar e transformar a ideia em uma aplicação funcional.
 
-##### 🚀 **COMO EXECUTAR O PROJETO**
-Siga os passos abaixo para rodar o projeto localmente:
+Este repositório contém o código do meu portfólio pessoal. Aqui apresento minha trajetória, meu repertório técnico e alguns projetos que desenvolvi.
 
-**Pré-requisitos**
+**Veja o portfólio publicado:** [portfolio-react-rose-sigma.vercel.app](https://portfolio-react-rose-sigma.vercel.app/)
 
-- Node.js (versão 16 ou superior)
-- npm ou yarn
+## Sobre o site
 
-**Passos**
-- **Clone o repositório:**
-`git clone https://github.com/seu-usuario/seu-repositorio.git`
+O portfólio foi construído com React e Sass/SCSS. A interface é organizada em uma página única, com navegação por seções e layout responsivo para diferentes tamanhos de tela.
 
-- **Acesse a pasta do projeto:**
-`cd seu-repositorio`
+O conteúdo inclui uma apresentação pessoal, projetos em destaque, tecnologias, formação, trajetória profissional e canais de contato. A ideia é mostrar não apenas as ferramentas que utilizo, mas também como aplico esse conhecimento em projetos reais.
 
-**Instale as dependências:**
+## Projetos em destaque
 
-- `npm install`
+### 1. Bloco Santo Pecado
 
-**Inicie o servidor de desenvolvimento:**
+**Plataforma digital · Cultura**
 
-- npm start
+Plataforma desenvolvida para um bloco cultural de Brasília. O projeto reúne a presença institucional do bloco e ferramentas para apoiar a organização de eventos e a comunidade.
 
-**Acesse o projeto:**
+Entre as funcionalidades implementadas:
 
-- Abra o navegador e acesse:
-http://localhost:3000
+- Área de integrantes com cadastro, autenticação e gerenciamento de perfis.
+- Agenda de eventos, RSVP e check-in por QR Code com assinatura HMAC.
+- Painel administrativo.
+- Music Studio com editor de partituras e sampler.
 
-##### 🛠** TECNOLOGIAS UTILIZADAS**
+**Tecnologias:** Next.js, React, TypeScript, Tailwind CSS, PostgreSQL e Drizzle ORM.
 
-- React: Biblioteca JavaScript para construção de interfaces.
+- [Acessar o projeto](https://bsp-site-delta.vercel.app/)
+- [Ver repositório](https://github.com/felipeabdo/bsp-site)
 
-- SCSS: Pré-processador CSS para estilização avançada.
+### 2. Clínica Divertin
 
-- React Router: Para gerenciamento de rotas.
+**Website institucional · Saúde**
 
-- Font Awesome: Para ícones.
+Website institucional para uma clínica especializada no desenvolvimento infantil. O foco do projeto é apresentar os serviços e as especialidades de forma clara, com uma comunicação acolhedora e caminhos simples para contato.
 
-- Responsive Design: Layout adaptável para mobile, tablet e desktop.
+Entre os recursos implementados:
 
-**📂 ESTRUTURA DO PROJETO**
+- Conteúdo institucional e apresentação das especialidades.
+- Fluxo de envio de e-mails com Nodemailer.
+- Upload de arquivos com Vercel Blob.
+- Integrações com serviços do Google.
 
-**Aqui está uma visão geral da estrutura do projeto:**
+**Tecnologias:** Next.js, React, TypeScript, Tailwind CSS, Nodemailer e Vercel Blob.
 
+- [Acessar o projeto](https://www.clinicadivertin.com.br/)
+- [Ver repositório](https://github.com/felipeabdo/site-divertin)
+
+### 3. Jéssica & Felipe
+
+**Aplicação web · Projeto autoral**
+
+Aplicação criada para o nosso casamento, com o objetivo de reunir informações para os convidados e ferramentas de organização em um só lugar.
+
+Entre os recursos desenvolvidos:
+
+- Páginas dinâmicas e confirmação de presença (RSVP).
+- Lista de presentes e painel de transparência.
+- Gerenciamento de convidados.
+- Galeria de fotos e mensagens.
+- Área administrativa.
+
+**Tecnologias:** React, TypeScript, Vite, Express, Firebase, Cloudinary e Gemini API.
+
+- [Acessar o projeto](https://jesselipe.com.br/)
+- [Ver repositório](https://github.com/felipeabdo/casamento)
+
+## Tecnologias
+
+As ferramentas abaixo fazem parte do meu repertório de estudos e desenvolvimento. A utilização varia conforme as necessidades de cada projeto.
+
+**Front-end**
+
+- HTML5 e CSS3
+- JavaScript e TypeScript
+- React e Next.js
+- Tailwind CSS
+- Sass / SCSS
+
+**Back-end e dados**
+
+- Node.js e Express
+- APIs REST
+- PostgreSQL
+- Drizzle ORM
+- Firebase / Firestore
+
+**Ferramentas e serviços**
+
+- Git e GitHub
+- Vercel
+- Figma
+- Nodemailer
+- Cloudinary
+- Vercel Blob
+
+Também tive contato com Ruby on Rails e Angular em formações e projetos anteriores.
+
+## Tecnologias utilizadas neste repositório
+
+Este site utiliza:
+
+| Tecnologia | Papel no projeto |
+| --- | --- |
+| React 19 | Construção da interface e dos componentes |
+| JavaScript | Lógica e interatividade |
+| Sass / SCSS | Estilização e organização dos estilos |
+| Create React App (`react-scripts`) | Ambiente de desenvolvimento e geração do build |
+| Font Awesome | Ícones da interface |
+
+## Executar localmente
+
+Você precisa ter o [Node.js](https://nodejs.org/) e o npm instalados.
+
+**1. Clone o repositório**
+
+```bash
+git clone https://github.com/felipeabdo/portfolio-react.git
 ```
-portifolio-react/
-├── public/                  # Arquivos estáticos (favicon, manifest.json, etc.)
-├── src/                     # Código-fonte do projeto
-│   ├── assets/              # Imagens e estilos
-│   ├── components/          # Componentes reutilizáveis
-│   ├── pages/               # Páginas do site
-│   ├── App.js               # Componente principal
-│   ├── index.js             # Ponto de entrada
-│   └── index.css            # Estilos globais
-├── package.json             # Dependências e scripts
-└── README.md                # Este arquivo
+
+**2. Entre na pasta do projeto**
+
+```bash
+cd portfolio-react
 ```
 
+**3. Instale as dependências**
 
-**🎨 FUNCIONALIDADES**
+```bash
+npm install
+```
 
-#### **Páginas:**
+**4. Inicie o servidor de desenvolvimento**
 
-- **Sobre Mim:** Apresentação pessoal e informações sobre minha carreira.
-- **Currículo:** Detalhes sobre minha experiência profissional.
-- **Portfólio:** Projetos que desenvolvi (em breve).
-- **Skills:** Minhas habilidades técnicas.
-- **Contato:** Formas de entrar em contato comigo.
+```bash
+npm start
+```
 
-**Responsividade:**
+A aplicação ficará disponível em [http://localhost:3000](http://localhost:3000).
 
-Layout adaptável para dispositivos móveis, tablets e desktops.
+## Scripts disponíveis
 
-**Tema Dinâmico:**
+| Comando | Descrição |
+| --- | --- |
+| `npm start` | Inicia o servidor de desenvolvimento. |
+| `npm run build` | Gera a versão otimizada para publicação. |
+| `npm test` | Executa os testes no ambiente do Create React App. |
 
-Favicon que muda automaticamente com base no tema do sistema (claro/escuro).
+## Estrutura principal
 
-**🖼 PREVIEW**
+```text
+portfolio-react/
+├── public/                 # Arquivos públicos e metadados da aplicação
+├── src/
+│   ├── assets/
+│   │   ├── images/         # Imagens utilizadas no site
+│   │   └── styles/         # Estilos em SCSS
+│   ├── pages/
+│   │   └── Home.js         # Página principal e conteúdo do portfólio
+│   ├── App.js              # Componente raiz
+│   └── index.js            # Ponto de entrada da aplicação
+├── package.json
+└── README.md
+```
 
-Desktop
+## Formação e trajetória
 
-![Desktop Screenshot](https://github.com/felipeabdo/portfolio-react/blob/main/src/assets/images/screeenshot/desktop.png)
+Atualmente curso Análise e Desenvolvimento de Sistemas no IESB. Minha formação anterior em Propaganda e Marketing e minha experiência com comunicação e direção de arte também fazem parte da maneira como trabalho com desenvolvimento: procuro equilibrar organização, clareza, identidade visual e funcionamento.
 
+Sigo estudando e construindo projetos para aprofundar meus conhecimentos em desenvolvimento web.
 
-Mobile
+## Contato
 
-![Mobile image](https://github.com/felipeabdo/portfolio-react/blob/main/src/assets/images/screeenshot/mobile.png)
+Estou aberto a oportunidades em desenvolvimento web, projetos colaborativos e novas conexões na área de tecnologia.
 
+- **E-mail:** [felipe.abdo.ti@gmail.com](mailto:felipe.abdo.ti@gmail.com)
+- **LinkedIn:** [linkedin.com/in/felipeabdo](https://www.linkedin.com/in/felipeabdo/)
+- **GitHub:** [github.com/felipeabdo](https://github.com/felipeabdo)
+- **Localização:** Brasília — DF, Brasil
 
+---
 
-**🛠 COMO CONTRIBUIR**
-
-**Contribuições são bem-vindas! Siga os passos abaixo:**
-
-- Faça um fork do projeto.
-- Crie uma branch para sua feature:
-
-`git checkout -b minha-feature`
-
-- Commit suas mudanças:
-
-`git commit -m 'Adicionei uma nova feature'`
-
-- Envie as alterações:
-
-`git push origin minha-feature`
-
-- Abra um Pull Request.
-
-**📄 LICENÇA**
-
-- Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-**👤 AUTOR**
-
-- **Felipe Barroso Abdo**
-- **GitHub**: felipeabdo
-- **LinkedIn:** Felipe Barroso Abdo
-- **E-mail:** felipe.abdo.ti@gmail.com
-
-**🙌 AGRADECIMENTOS**
-
-- À comunidade React por fornecer uma biblioteca incrível.
-- Ao Font Awesome pelos ícones de alta qualidade.
-- A todos que me inspiraram e ajudaram ao longo do caminho.
-- Feito com ❤️ por Felipe Barroso Abdo!
+Desenvolvido por Felipe Barroso Abdo.

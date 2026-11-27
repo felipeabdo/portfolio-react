@@ -29,6 +29,8 @@ const projects = [
     artSubtitle: 'Comunidade · Eventos · Música',
     artSymbol: '✳',
     theme: 'bsp',
+    previewUrl: 'bsp-site-delta.vercel.app',
+    previewImage: 'https://bsp-site-delta.vercel.app/brand/photos/home-hero-complete-960.webp',
     liveUrl: 'https://bsp-site-delta.vercel.app/',
     repoUrl: 'https://github.com/felipeabdo/bsp-site',
   },
@@ -50,6 +52,9 @@ const projects = [
     artSubtitle: 'Informação · Acolhimento · Contato',
     artSymbol: '✦',
     theme: 'divertin',
+    previewUrl: 'clinicadivertin.com.br',
+    previewImage: 'https://www.clinicadivertin.com.br/bg-hero.webp',
+    previewLogo: 'https://www.clinicadivertin.com.br/logo%20(1).webp',
     liveUrl: 'https://www.clinicadivertin.com.br/',
     repoUrl: 'https://github.com/felipeabdo/site-divertin',
   },
@@ -71,6 +76,9 @@ const projects = [
     artSubtitle: 'Convidados · Memórias · Organização',
     artSymbol: '∞',
     theme: 'casamento',
+    previewUrl: 'jesselipe.com.br',
+    previewImage: 'https://i.imgur.com/rzJAEba.jpeg',
+    liveUrl: 'https://jesselipe.com.br/',
     repoUrl: 'https://github.com/felipeabdo/casamento',
   },
 ];
@@ -136,21 +144,71 @@ function SectionHeading({ eyebrow, title, note }) {
 function ProjectCard({ project }) {
   return (
     <article className={`project-card project-card--${project.theme}`}>
-      <div className={`project-art project-art--${project.theme}`} aria-hidden="true">
-        <div className="art-toolbar">
-          <div className="art-window-dots"><i /><i /><i /></div>
-          <span>FBA / PROJETOS</span>
-          <span className="art-window-number">{project.number}</span>
+      <div
+        className={`project-preview project-preview--${project.theme}`}
+        role="img"
+        aria-label={`Prévia visual do site ${project.previewUrl}`}
+      >
+        <div className="preview-browser-bar" aria-hidden="true">
+          <div className="preview-browser-dots"><i /><i /><i /></div>
+          <span className="preview-browser-address">{project.previewUrl}</span>
+          <span className="preview-browser-status">LIVE</span>
         </div>
-        <div className="art-main">
-          <p>{project.artEyebrow}</p>
-          <strong>{project.artTitle}</strong>
-          <span>{project.artSubtitle}</span>
+
+        <div className={`preview-stage preview-stage--${project.theme}`}>
+          <img
+            className="preview-image"
+            src={project.previewImage}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+          />
+
+          {project.id === 'bsp' ? (
+            <>
+              <div className="preview-bsp-copy">
+                <span className="preview-bsp-eyebrow">EU CURTO BLOCO DE RUA!</span>
+                <strong className="preview-bsp-name">Bloco <em>Santo Pecado</em></strong>
+                <span className="preview-bsp-meta">BRASÍLIA · SAMBA-REGGAE · DESDE 2013</span>
+                <div className="preview-mini-actions">
+                  <span>EVENTOS</span><span>OFICINA BSP</span>
+                </div>
+              </div>
+              <div className="preview-bsp-seal" aria-hidden="true"><span>✳</span><small>BSB<br />2013</small></div>
+            </>
+          ) : null}
+
+          {project.id === 'divertin' ? (
+            <div className="preview-divertin-copy">
+              <img className="preview-divertin-logo" src={project.previewLogo} alt="" />
+              <span className="preview-divertin-specialty">TERAPIA INFANTIL</span>
+              <strong>Diversa em cuidado,<br />única em conexão.</strong>
+              <small>Comunicação · Linguagem · Desenvolvimento</small>
+            </div>
+          ) : null}
+
+          {project.id === 'casamento' ? (
+            <>
+              <div className="preview-wedding-brand">
+                <span className="preview-wedding-monogram">JF</span>
+                <small>JÉSSICA &amp; FELIPE</small>
+              </div>
+              <div className="preview-wedding-copy">
+                <span>COM ALEGRIA, CONVIDAMOS</span>
+                <strong>Jéssica <i>&amp;</i> Felipe</strong>
+                <small>SAVE THE DATE · 02.08.2026</small>
+              </div>
+              <div className="preview-wedding-footer">NOSSA HISTÓRIA, AGORA CELEBRADA COM VOCÊ</div>
+            </>
+          ) : null}
         </div>
-        <div className="art-footer">
-          <span>CASE {project.number}</span>
-          <span className="art-symbol">{project.artSymbol}</span>
-        </div>
+
+        {project.id === 'bsp' ? (
+          <div className="preview-bsp-marquee" aria-hidden="true">
+            <span>EU CURTO BLOCO DE RUA ✳ TOMATE ✳ É O TCHAN ✳ HARMONIA DO SAMBA ✳ ARA KETU ✳ MOLEJO ✳ SAULO ✳&nbsp;&nbsp;&nbsp;</span>
+          </div>
+        ) : null}
       </div>
 
       <div className="project-content">
