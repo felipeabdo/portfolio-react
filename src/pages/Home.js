@@ -166,8 +166,7 @@ function supportsHoverPreview() {
     && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 }
 
-function ProjectLivePreview({ project, activePreviewId, previewRef, onOpenPreview }) {
-  const isActive = activePreviewId === project.id;
+function ProjectLivePreview({ project, previewRef, onOpenPreview }) {
   const address = project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
   return (
@@ -179,10 +178,18 @@ function ProjectLivePreview({ project, activePreviewId, previewRef, onOpenPrevie
       }}
       aria-label={`Prévia interativa de ${project.title}`}
     >
-      <div className="preview-browser-bar" aria-hidden="true">
+      <div className="preview-browser-bar">
         <div className="preview-browser-dots"><i /><i /><i /></div>
         <span className="preview-browser-address">{address}</span>
-        <span className="preview-browser-status">{isActive ? 'AO VIVO' : 'PREVIEW'}</span>
+        <span className="preview-browser-status">LIVE</span>
+        <button
+          className="preview-browser-expand"
+          type="button"
+          onClick={() => onOpenPreview(project, previewRef.current, true)}
+          aria-label={`Expandir ${project.title}`}
+        >
+          Expandir <span aria-hidden="true">↗</span>
+        </button>
       </div>
 
       <div className={`project-preview-poster project-preview-poster--${project.theme}`}>
@@ -208,14 +215,13 @@ function ProjectLivePreview({ project, activePreviewId, previewRef, onOpenPrevie
   );
 }
 
-function ProjectCard({ project, activePreviewId, onOpenPreview }) {
+function ProjectCard({ project, onOpenPreview }) {
   const previewRef = useRef(null);
 
   return (
     <article className={`project-card project-card--${project.theme}`}>
       <ProjectLivePreview
         project={project}
-        activePreviewId={activePreviewId}
         previewRef={previewRef}
         onOpenPreview={onOpenPreview}
       />
@@ -466,7 +472,6 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [preview, setPreview] = useState(null);
-  const activePreviewId = preview ? preview.project.id : null;
 
   const openPreview = useCallback((project, element, expand = false) => {
     if (!element) return;
@@ -587,7 +592,6 @@ function Home() {
                 <ProjectCard
                   key={project.id}
                   project={project}
-                  activePreviewId={activePreviewId}
                   onOpenPreview={openPreview}
                 />
               ))}

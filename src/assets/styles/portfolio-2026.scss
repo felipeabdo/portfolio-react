@@ -1217,3 +1217,81 @@ button { font: inherit; }
     transition-delay: 0s;
   }
 }
+
+/* PROJECT_PREVIEW_TOOLBAR_ALWAYS_VISIBLE */
+.project-preview .preview-browser-bar {
+  height: 58px;
+  min-height: 58px;
+  flex: 0 0 58px;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.project-preview .preview-browser-address {
+  flex: 0 1 auto;
+  max-width: min(52%, 260px);
+}
+
+.project-preview .preview-browser-status {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.project-preview .preview-browser-expand {
+  min-height: 34px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 11px;
+  border: 1px solid rgba(210,245,109,.35);
+  border-radius: 3px;
+  background: transparent;
+  color: #dce7dd;
+  font: 700 9px/1 var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color .2s ease, color .2s ease, background .2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.project-preview .preview-browser-expand:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.project-preview .preview-browser-expand:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.project-preview .preview-browser-expand span {
+  color: var(--accent);
+  font-size: 13px;
+}
+
+@media (max-width: 560px) {
+  .project-preview .preview-browser-bar {
+    gap: 7px;
+    padding-inline: 9px;
+  }
+
+  .project-preview .preview-browser-address {
+    max-width: 46%;
+    padding-inline: 7px;
+    font-size: 7px;
+  }
+
+  .project-preview .preview-browser-status {
+    font-size: 7px;
+  }
+
+  .project-preview .preview-browser-expand {
+    min-height: 32px;
+    gap: 5px;
+    padding-inline: 8px;
+    font-size: 8px;
+  }
+}
