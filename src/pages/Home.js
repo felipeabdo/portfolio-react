@@ -268,6 +268,9 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
   const scaleY = preview.origin.height / viewportHeight;
   const windowStyle = {
     '--preview-origin-transform': `translate3d(${preview.origin.left}px, ${preview.origin.top}px, 0) scale(${scaleX}, ${scaleY})`,
+    '--preview-scale-x': expanded ? 1 : scaleX,
+    '--preview-scale-y': expanded ? 1 : scaleY,
+    '--preview-origin-width': `${preview.origin.width}px`,
   };
   const locked = expanded || closing;
 
