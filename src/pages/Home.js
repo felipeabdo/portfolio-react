@@ -263,16 +263,18 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
   const finishedRef = useRef(false);
   const address = preview.project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
   const viewportWidth = Math.max(window.innerWidth, 1);
-  const viewportHeight = Math.max(window.innerHeight, 1);
-  const scaleX = preview.origin.width / viewportWidth;
-  const scaleY = preview.origin.height / viewportHeight;
+  const viewportHeight = Math.max(document.documentElement.clientHeight || window.innerHeight, 1);
+  const scale = Math.min(preview.origin.width / viewportWidth, 1);
+  const clipHeight = Math.min(viewportHeight, preview.origin.height / scale);
   const windowStyle = {
-    '--preview-origin-transform': `translate3d(${preview.origin.left}px, ${preview.origin.top}px, 0) scale(${scaleX}, ${scaleY})`,
-    '--preview-scale-x': expanded ? 1 : scaleX,
-    '--preview-scale-y': expanded ? 1 : scaleY,
+    '--preview-origin-transform': `translate3d(${preview.origin.left}px, ${preview.origin.top}px, 0) scale(${scale})`,
+    '--preview-scale-x': expanded ? 1 : scale,
+    '--preview-scale-y': expanded ? 1 : scale,
     '--preview-origin-width': `${preview.origin.width}px`,
+    '--preview-clip-height': `${clipHeight}px`,
+    '--preview-toolbar-height': '58px',
   };
-  const locked = expanded || closing;
+  const locked = expanded;
 
   const closeWindow = useCallback(() => {
     if (closing) return;
@@ -308,42 +310,60 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
 
     const root = document.documentElement;
     const body = document.body;
-    const scrollY = window.scrollY;
+    const scrollY = Number.isFinite(preview.scrollY) ? preview.scrollY : window.scrollY;
+    const previousScrollBehavior = root.style.getPropertyValue('scroll-behavior');
+    const previousScrollBehaviorPriority = root.style.getPropertyPriority('scroll-behavior');
     const previous = {
-      rootOverflow: root.style.overflow,
+      rootOverflow: root.style.getPropertyValue('overflow'),
+      rootOverflowPriority: root.style.getPropertyPriority('overflow'),
       rootOverscroll: root.style.overscrollBehavior,
       bodyPosition: body.style.position,
       bodyTop: body.style.top,
       bodyLeft: body.style.left,
       bodyRight: body.style.right,
       bodyWidth: body.style.width,
-      bodyOverflow: body.style.overflow,
+      bodyOverflow: body.style.getPropertyValue('overflow'),
+      bodyOverflowPriority: body.style.getPropertyPriority('overflow'),
       bodyOverscroll: body.style.overscrollBehavior,
     };
 
-    root.style.overflow = 'hidden';
+    root.style.setProperty('overflow', 'hidden', 'important');
     root.style.overscrollBehavior = 'none';
     body.style.position = 'fixed';
     body.style.top = `-${scrollY}px`;
     body.style.left = '0';
     body.style.right = '0';
     body.style.width = '100%';
-    body.style.overflow = 'hidden';
+    body.style.setProperty('overflow', 'hidden', 'important');
     body.style.overscrollBehavior = 'none';
 
     return () => {
-      root.style.overflow = previous.rootOverflow;
+      root.style.setProperty('scroll-behavior', 'auto', 'important');
+      if (previous.rootOverflow) {
+        root.style.setProperty('overflow', previous.rootOverflow, previous.rootOverflowPriority);
+      } else {
+        root.style.removeProperty('overflow');
+      }
       root.style.overscrollBehavior = previous.rootOverscroll;
       body.style.position = previous.bodyPosition;
       body.style.top = previous.bodyTop;
       body.style.left = previous.bodyLeft;
       body.style.right = previous.bodyRight;
       body.style.width = previous.bodyWidth;
-      body.style.overflow = previous.bodyOverflow;
+      if (previous.bodyOverflow) {
+        body.style.setProperty('overflow', previous.bodyOverflow, previous.bodyOverflowPriority);
+      } else {
+        body.style.removeProperty('overflow');
+      }
       body.style.overscrollBehavior = previous.bodyOverscroll;
       window.scrollTo(0, scrollY);
+      if (previousScrollBehavior) {
+        root.style.setProperty('scroll-behavior', previousScrollBehavior, previousScrollBehaviorPriority);
+      } else {
+        root.style.removeProperty('scroll-behavior');
+      }
     };
-  }, [locked]);
+  }, [locked, preview.scrollY]);
 
   useEffect(() => {
     if (!locked) return undefined;
@@ -371,8 +391,15 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
       closeWindow();
     };
 
+    const handleScroll = () => closeWindow();
+
     document.addEventListener('pointermove', handlePointerMove, { passive: true });
-    return () => document.removeEventListener('pointermove', handlePointerMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      document.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [expanded, closing, preview.card, closeWindow]);
 
   useEffect(() => {
@@ -453,6 +480,7 @@ function Home() {
         height: rect.height,
       },
       card: element.closest('.project-card'),
+      scrollY: window.scrollY,
       expand,
     };
 
