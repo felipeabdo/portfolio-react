@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 const profilePhoto = require('../assets/images/profile-instagram.jpg');
@@ -161,10 +161,6 @@ function SectionHeading({ eyebrow, title, note }) {
   );
 }
 
-const PROJECT_PREVIEWS_FLUID = true;
-const PREVIEW_VIEWPORT_WIDTH = 1440;
-const PREVIEW_VIEWPORT_HEIGHT = 1024;
-
 function supportsHoverPreview() {
   return typeof window !== 'undefined'
     && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -173,8 +169,6 @@ function supportsHoverPreview() {
 function ProjectLivePreview({ project, activePreviewId, previewRef, onOpenPreview }) {
   const isActive = activePreviewId === project.id;
   const address = project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
-
-  const openPreview = () => onOpenPreview(project, previewRef.current, true);
 
   return (
     <div
@@ -204,7 +198,7 @@ function ProjectLivePreview({ project, activePreviewId, previewRef, onOpenPrevie
         <button
           className="project-preview-mobile-trigger"
           type="button"
-          onClick={openPreview}
+          onClick={() => onOpenPreview(project, previewRef.current, true)}
           aria-label={`Abrir ${project.title} em tela cheia`}
         >
           Experimentar projeto <span aria-hidden="true">↗</span>
@@ -214,19 +208,11 @@ function ProjectLivePreview({ project, activePreviewId, previewRef, onOpenPrevie
   );
 }
 
-function ProjectCard({ project, activePreviewId, onOpenPreview, onClosePreview }) {
+function ProjectCard({ project, activePreviewId, onOpenPreview }) {
   const previewRef = useRef(null);
 
   return (
-    <article
-      className={`project-card project-card--${project.theme}`}
-      onMouseLeave={(event) => {
-        if (activePreviewId !== project.id) return;
-        const target = event.relatedTarget;
-        if (target && target.closest && target.closest('.project-preview-window')) return;
-        onClosePreview(project.id);
-      }}
-    >
+    <article className={`project-card project-card--${project.theme}`}>
       <ProjectLivePreview
         project={project}
         activePreviewId={activePreviewId}
@@ -273,27 +259,33 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
   const [expanded, setExpanded] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [closing, setClosing] = useState(false);
+  const windowRef = useRef(null);
   const finishedRef = useRef(false);
   const address = preview.project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
-  const scale = Math.min(preview.origin.width / PREVIEW_VIEWPORT_WIDTH, 1);
+  const viewportWidth = Math.max(window.innerWidth, 1);
+  const viewportHeight = Math.max(window.innerHeight, 1);
+  const scaleX = preview.origin.width / viewportWidth;
+  const scaleY = preview.origin.height / viewportHeight;
   const windowStyle = {
-    '--preview-top': `${preview.origin.top}px`,
-    '--preview-left': `${preview.origin.left}px`,
-    '--preview-width': `${preview.origin.width}px`,
-    '--preview-height': `${preview.origin.height}px`,
-    '--preview-scale': scale,
+    '--preview-origin-transform': `translate3d(${preview.origin.left}px, ${preview.origin.top}px, 0) scale(${scaleX}, ${scaleY})`,
   };
+  const locked = expanded || closing;
 
-  const closeWindow = () => {
+  const closeWindow = useCallback(() => {
+    if (closing) return;
+    if (!expanded) {
+      onDismiss();
+      return;
+    }
     setClosing(true);
     setExpanded(false);
-  };
+  }, [closing, expanded, onDismiss]);
 
-  const finishClose = () => {
+  const finishClose = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
     onDismiss();
-  };
+  }, [onDismiss]);
 
   useEffect(() => {
     if (!preview.expand) return undefined;
@@ -309,46 +301,94 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
   }, [preview.expand]);
 
   useEffect(() => {
-    if (!expanded && !closing) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    if (!locked) return undefined;
+
+    const root = document.documentElement;
+    const body = document.body;
+    const scrollY = window.scrollY;
+    const previous = {
+      rootOverflow: root.style.overflow,
+      rootOverscroll: root.style.overscrollBehavior,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyLeft: body.style.left,
+      bodyRight: body.style.right,
+      bodyWidth: body.style.width,
+      bodyOverflow: body.style.overflow,
+      bodyOverscroll: body.style.overscrollBehavior,
+    };
+
+    root.style.overflow = 'hidden';
+    root.style.overscrollBehavior = 'none';
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+    body.style.overscrollBehavior = 'none';
+
+    return () => {
+      root.style.overflow = previous.rootOverflow;
+      root.style.overscrollBehavior = previous.rootOverscroll;
+      body.style.position = previous.bodyPosition;
+      body.style.top = previous.bodyTop;
+      body.style.left = previous.bodyLeft;
+      body.style.right = previous.bodyRight;
+      body.style.width = previous.bodyWidth;
+      body.style.overflow = previous.bodyOverflow;
+      body.style.overscrollBehavior = previous.bodyOverscroll;
+      window.scrollTo(0, scrollY);
+    };
+  }, [locked]);
+
+  useEffect(() => {
+    if (!locked) return undefined;
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        setClosing(true);
-        setExpanded(false);
-      }
+      if (event.key === 'Escape') closeWindow();
     };
     document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [locked, closeWindow]);
+
+  useEffect(() => {
+    if (expanded || closing) return undefined;
+
+    const inside = (rect, x, y) => rect
+      && x >= rect.left
+      && x <= rect.right
+      && y >= rect.top
+      && y <= rect.bottom;
+
+    const handlePointerMove = (event) => {
+      const cardRect = preview.card && preview.card.getBoundingClientRect();
+      const windowRect = windowRef.current && windowRef.current.getBoundingClientRect();
+      if (inside(cardRect, event.clientX, event.clientY)) return;
+      if (inside(windowRect, event.clientX, event.clientY)) return;
+      closeWindow();
     };
-  }, [expanded, closing]);
+
+    document.addEventListener('pointermove', handlePointerMove, { passive: true });
+    return () => document.removeEventListener('pointermove', handlePointerMove);
+  }, [expanded, closing, preview.card, closeWindow]);
 
   useEffect(() => {
     if (!closing) return undefined;
-    const timer = window.setTimeout(() => {
-      if (finishedRef.current) return;
-      finishedRef.current = true;
-      onDismiss();
-    }, 520);
+    const timer = window.setTimeout(finishClose, 620);
     return () => window.clearTimeout(timer);
-  }, [closing, onDismiss]);
+  }, [closing, finishClose]);
 
   return createPortal(
     <div
+      ref={windowRef}
+      data-preview-fluid-fix="true"
       className={`project-preview-window${expanded ? ' is-expanded' : ''}${closing ? ' is-closing' : ''}`}
       style={windowStyle}
       role={expanded ? 'dialog' : undefined}
       aria-modal={expanded ? 'true' : undefined}
-      aria-labelledby={`project-preview-title-${preview.project.id}`}
-      onMouseLeave={(event) => {
-        const target = event.relatedTarget;
-        const remainsInsideCard = target && preview.card && preview.card.contains(target);
-        if (!expanded && !closing && !remainsInsideCard) onDismiss();
-      }}
+      aria-label={`Projeto ${preview.project.title}`}
       onTransitionEnd={(event) => {
-        if (closing && event.target === event.currentTarget && event.propertyName === 'width') finishClose();
+        if (closing && event.target === event.currentTarget && event.propertyName === 'transform') finishClose();
       }}
     >
       <div className="project-preview-window__bar">
@@ -374,18 +414,18 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
           {preview.project.previewImage ? <img src={preview.project.previewImage} alt="" /> : null}
           <div>
             <span>ABRINDO EXPERIÊNCIA</span>
-            <strong id={`project-preview-title-${preview.project.id}`}>{preview.project.title}</strong>
+            <strong>{preview.project.title}</strong>
           </div>
         </div>
         <iframe
-          className={`project-preview-window__frame${loaded ? ' is-loaded' : ''}`}
+          className="project-preview-window__frame"
           src={preview.project.liveUrl}
           title={`Projeto ${preview.project.title}`}
-          width={PREVIEW_VIEWPORT_WIDTH}
-          height={PREVIEW_VIEWPORT_HEIGHT}
           loading="eager"
+          scrolling="auto"
           referrerPolicy="strict-origin-when-cross-origin"
           allow="autoplay; fullscreen"
+          allowFullScreen
           onLoad={() => setLoaded(true)}
         />
       </div>
@@ -397,10 +437,11 @@ function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [preview, setPreview] = useState(null);
   const activePreviewId = preview ? preview.project.id : null;
-  const openPreview = (project, element, expand = false) => {
+
+  const openPreview = useCallback((project, element, expand = false) => {
     if (!element) return;
     const rect = element.getBoundingClientRect();
-    setPreview({
+    const nextPreview = {
       project,
       origin: {
         top: rect.top,
@@ -410,13 +451,17 @@ function Home() {
       },
       card: element.closest('.project-card'),
       expand,
+    };
+
+    setPreview((current) => {
+      if (current && current.project.id === project.id) {
+        return { ...current, expand: current.expand || expand };
+      }
+      return nextPreview;
     });
-  };
-  const closePreview = (projectId) => {
-    setPreview((current) => (
-      current && current.project.id === projectId ? null : current
-    ));
-  };
+  }, []);
+
+  const dismissPreview = useCallback(() => setPreview(null), []);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -513,7 +558,6 @@ function Home() {
                   project={project}
                   activePreviewId={activePreviewId}
                   onOpenPreview={openPreview}
-                  onClosePreview={closePreview}
                 />
               ))}
             </div>
@@ -613,7 +657,7 @@ function Home() {
         <ProjectPreviewWindow
           key={preview.project.id}
           preview={preview}
-          onDismiss={() => closePreview(preview.project.id)}
+          onDismiss={dismissPreview}
         />
       ) : null}
 
