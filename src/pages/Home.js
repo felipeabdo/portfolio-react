@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 const profilePhoto = require('../assets/images/profile-instagram.jpg');
@@ -267,6 +267,8 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
   const [closing, setClosing] = useState(false);
   const windowRef = useRef(null);
   const finishedRef = useRef(false);
+  const alignPageRef = useRef(null);
+  const alignedPageRef = useRef(false);
   const address = preview.project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
   const viewportWidth = Math.max(window.innerWidth, 1);
   const viewportHeight = Math.max(document.documentElement.clientHeight || window.innerHeight, 1);
@@ -274,6 +276,7 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
   const clipHeight = Math.min(viewportHeight, preview.origin.height / scale);
   const windowStyle = {
     '--preview-origin-transform': `translate3d(${preview.origin.left}px, ${preview.origin.top}px, 0) scale(${scale})`,
+    '--preview-close-origin-transform': `translate3d(${preview.origin.left}px, ${alignedPageRef.current ? preview.targetTop : preview.origin.top}px, 0) scale(${scale})`,
     '--preview-scale-x': expanded ? 1 : scale,
     '--preview-scale-y': expanded ? 1 : scale,
     '--preview-origin-width': `${preview.origin.width}px`,
@@ -311,12 +314,15 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
     };
   }, [preview.expand]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!locked) return undefined;
 
     const root = document.documentElement;
     const body = document.body;
-    const scrollY = Number.isFinite(preview.scrollY) ? preview.scrollY : window.scrollY;
+    const initialScrollY = Number.isFinite(preview.scrollY) ? preview.scrollY : window.scrollY;
+    const targetScrollY = Number.isFinite(preview.targetScrollY) ? preview.targetScrollY : initialScrollY;
+    const scrollX = window.scrollX;
+    let restoreScrollY = initialScrollY;
     const previousScrollBehavior = root.style.getPropertyValue('scroll-behavior');
     const previousScrollBehaviorPriority = root.style.getPropertyPriority('scroll-behavior');
     const previous = {
@@ -336,14 +342,23 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
     root.style.setProperty('overflow', 'hidden', 'important');
     root.style.overscrollBehavior = 'none';
     body.style.position = 'fixed';
-    body.style.top = `-${scrollY}px`;
+    body.style.top = `-${initialScrollY}px`;
     body.style.left = '0';
     body.style.right = '0';
     body.style.width = '100%';
     body.style.setProperty('overflow', 'hidden', 'important');
     body.style.overscrollBehavior = 'none';
 
+    alignedPageRef.current = false;
+    alignPageRef.current = () => {
+      if (alignedPageRef.current) return;
+      body.style.top = `-${targetScrollY}px`;
+      restoreScrollY = targetScrollY;
+      alignedPageRef.current = true;
+    };
+
     return () => {
+      alignPageRef.current = null;
       root.style.setProperty('scroll-behavior', 'auto', 'important');
       if (previous.rootOverflow) {
         root.style.setProperty('overflow', previous.rootOverflow, previous.rootOverflowPriority);
@@ -362,14 +377,14 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
         body.style.removeProperty('overflow');
       }
       body.style.overscrollBehavior = previous.bodyOverscroll;
-      window.scrollTo(0, scrollY);
+      window.scrollTo(scrollX, restoreScrollY);
       if (previousScrollBehavior) {
         root.style.setProperty('scroll-behavior', previousScrollBehavior, previousScrollBehaviorPriority);
       } else {
         root.style.removeProperty('scroll-behavior');
       }
     };
-  }, [locked, preview.scrollY]);
+  }, [locked, preview.scrollY, preview.targetScrollY]);
 
   useEffect(() => {
     if (!locked) return undefined;
@@ -424,7 +439,9 @@ function ProjectPreviewWindow({ preview, onDismiss }) {
       aria-modal={expanded ? 'true' : undefined}
       aria-label={`Projeto ${preview.project.title}`}
       onTransitionEnd={(event) => {
-        if (closing && event.target === event.currentTarget && event.propertyName === 'transform') finishClose();
+        if (event.target !== event.currentTarget || event.propertyName !== 'transform') return;
+        if (closing) finishClose();
+        else if (expanded) alignPageRef.current?.();
       }}
     >
       <div className="project-preview-window__bar">
@@ -476,6 +493,9 @@ function Home() {
   const openPreview = useCallback((project, element, expand = false) => {
     if (!element) return;
     const rect = element.getBoundingClientRect();
+    const scrollY = window.scrollY;
+    const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    const targetScrollY = Math.min(maxScrollY, Math.max(0, scrollY + rect.top));
     const nextPreview = {
       project,
       origin: {
@@ -485,7 +505,9 @@ function Home() {
         height: rect.height,
       },
       card: element.closest('.project-card'),
-      scrollY: window.scrollY,
+      scrollY,
+      targetScrollY,
+      targetTop: rect.top + scrollY - targetScrollY,
       expand,
     };
 

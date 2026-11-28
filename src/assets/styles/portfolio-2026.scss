@@ -1295,3 +1295,8 @@ button { font: inherit; }
     font-size: 8px;
   }
 }
+
+/* PROJECT_PREVIEW_SCROLL_ALIGNMENT */
+.project-preview-window.is-closing {
+  transform: var(--preview-close-origin-transform, var(--preview-origin-transform));
+}
