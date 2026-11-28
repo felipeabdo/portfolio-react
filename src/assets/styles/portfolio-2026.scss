@@ -318,3 +318,715 @@ button { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Projeto Pokédex — preview editorial do catálogo e da experiência de exploração. */
+.project-card--pokedex {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1.04fr .96fr;
+}
+.project-card--pokedex .project-preview { min-height: 445px; }
+.project-card--pokedex .preview-stage--pokedex { min-height: 414px; background: #f5f6fa; }
+.project-card--pokedex .project-content { display: flex; flex-direction: column; justify-content: center; padding: 34px 34px 32px; }
+.project-card--pokedex .project-description { min-height: 0; }
+.project-card--pokedex .project-highlights { margin-top: 21px; }
+.project-card--pokedex .project-stack { margin-top: 22px; }
+
+.preview-pokedex-screen {
+  min-height: 414px;
+  padding: 13px 16px 14px;
+  overflow: hidden;
+  background: radial-gradient(circle at 91% 17%, rgba(248,214,78,.13), transparent 23%), #f5f6fa;
+  color: #20243a;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+}
+.preview-pokedex-topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.preview-pokedex-brand { display: flex; align-items: center; gap: 7px; min-width: 0; color: #20243a; }
+.preview-pokedex-brand strong { font: 800 12px/1 'Manrope', 'Segoe UI', sans-serif; letter-spacing: -.04em; }
+.preview-pokedex-brand small { padding-left: 8px; border-left: 1px solid #d9dce7; color: #9298ab; font: 600 6px/1.2 'DM Mono', monospace; letter-spacing: .12em; }
+.preview-pokedex-mark { position: relative; width: 17px; height: 17px; flex: 0 0 17px; border: 1.5px solid #5265d7; border-radius: 50%; background: linear-gradient(to bottom, #ed6572 0 46%, #5265d7 46% 55%, #fff 55% 100%); }
+.preview-pokedex-mark::after { position: absolute; top: 50%; left: 50%; width: 5px; height: 5px; border: 1px solid #5265d7; border-radius: 50%; background: #fff; content: ''; transform: translate(-50%, -50%); }
+.preview-pokedex-favorites { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border: 1px solid #e6e8f0; border-radius: 30px; background: rgba(255,255,255,.85); color: #596078; font-size: 7px; font-weight: 700; white-space: nowrap; }
+.preview-pokedex-favorites b { color: #e66c83; font-size: 10px; }
+.preview-pokedex-favorites i { display: grid; width: 14px; height: 14px; place-items: center; border-radius: 50%; background: #f0f1f7; color: #69718e; font: 700 7px/1 'DM Mono', monospace; }
+.preview-pokedex-intro { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 14px 0 12px; }
+.preview-pokedex-intro-copy { min-width: 0; }
+.preview-pokedex-intro-copy > span { display: block; margin-bottom: 5px; color: #858ba0; font: 700 6px/1.3 'DM Mono', monospace; letter-spacing: .13em; }
+.preview-pokedex-intro-copy strong { display: block; color: #20243a; font: 700 clamp(17px, 2.3vw, 25px)/.99 'Space Grotesk', 'Segoe UI', sans-serif; letter-spacing: -.065em; }
+.preview-pokedex-intro-copy em { color: #5265d7; font-style: normal; }
+.preview-pokedex-orbit { position: relative; width: 66px; height: 56px; flex: 0 0 66px; display: grid; place-items: center; border: 1px solid rgba(82,101,215,.17); border-radius: 50%; transform: rotate(-23deg); }
+.preview-pokedex-orbit::before { position: absolute; width: 50px; height: 50px; border: 1px dashed rgba(82,101,215,.23); border-radius: 50%; content: ''; }
+.preview-pokedex-orbit span { position: relative; width: 29px; height: 29px; border: 2px solid #5265d7; border-radius: 50%; background: linear-gradient(to bottom, #ed6572 0 45%, #5265d7 45% 55%, #fff 55%); box-shadow: 0 5px 12px rgba(35,45,100,.15); }
+.preview-pokedex-orbit span::after { position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; border: 2px solid #5265d7; border-radius: 50%; background: #fff; content: ''; transform: translate(-50%, -50%); }
+.preview-pokedex-filters { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(58px, .7fr) minmax(48px, .55fr); gap: 6px; }
+.preview-pokedex-filters > span { min-width: 0; height: 29px; display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 0 8px; border: 1px solid #e6e8f0; border-radius: 6px; background: rgba(255,255,255,.94); color: #7b8298; font-size: 7px; font-weight: 600; white-space: nowrap; }
+.preview-pokedex-filters .preview-pokedex-search { justify-content: flex-start; overflow: hidden; color: #a4a9b8; font-weight: 500; text-overflow: ellipsis; }
+.preview-pokedex-filters b { color: #a2a7b6; font-size: 9px; }
+.preview-pokedex-results-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 12px 0 7px; }
+.preview-pokedex-results-heading strong { color: #30364e; font: 700 10px/1.2 'Space Grotesk', sans-serif; }
+.preview-pokedex-results-heading span { color: #a0a5b4; font: 6px/1.2 'DM Mono', monospace; letter-spacing: .07em; }
+.preview-pokedex-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.preview-pokemon-tile { position: relative; min-width: 0; min-height: 78px; display: grid; grid-template-columns: 45px minmax(0, 1fr); align-items: center; gap: 4px; overflow: hidden; padding: 7px 6px; border: 1px solid #e8eaf1; border-radius: 7px; background: rgba(255,255,255,.96); box-shadow: 0 4px 12px rgba(36,43,84,.045); }
+.preview-pokemon-tile::after { position: absolute; top: -13px; left: -8px; width: 48px; height: 48px; border-radius: 50%; background: rgba(82,101,215,.055); content: ''; }
+.preview-pokemon-tile > img { position: relative; z-index: 1; width: 45px; height: 54px; display: block; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(32,36,58,.12)); }
+.preview-pokemon-id { position: absolute; top: 5px; right: 6px; z-index: 2; color: #b1b6c5; font: 6px/1 'DM Mono', monospace; }
+.preview-pokemon-tile > div { position: relative; z-index: 1; min-width: 0; align-self: center; padding-top: 8px; }
+.preview-pokemon-tile > div b { display: block; overflow: hidden; color: #30364e; font: 700 8px/1.2 'Manrope', sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.preview-pokemon-tile > div small { display: block; margin-top: 4px; color: #7b8298; font: 600 5px/1.25 'DM Mono', monospace; letter-spacing: .01em; }
+
+@media (max-width: 900px) {
+  .project-card--pokedex { grid-template-columns: 1fr 1fr; }
+  .project-card--pokedex .project-content { padding: 25px 22px; }
+  .preview-pokedex-screen { padding-right: 11px; padding-left: 11px; }
+  .preview-pokemon-tile { grid-template-columns: 39px minmax(0, 1fr); padding-right: 4px; padding-left: 4px; }
+  .preview-pokemon-tile > img { width: 39px; height: 49px; }
+}
+
+@media (max-width: 680px) {
+  .project-card--pokedex { grid-column: auto; display: block; }
+  .project-card--pokedex .project-preview { min-height: 420px; }
+  .project-card--pokedex .preview-stage--pokedex { min-height: 389px; }
+  .project-card--pokedex .project-content { padding: 21px 19px 22px; }
+  .preview-pokedex-screen { min-height: 389px; padding: 12px 10px 13px; }
+  .preview-pokedex-intro { margin-top: 13px; }
+  .preview-pokedex-intro-copy strong { font-size: clamp(18px, 5vw, 23px); }
+  .preview-pokedex-orbit { width: 52px; height: 48px; flex-basis: 52px; }
+  .preview-pokedex-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .preview-pokemon-tile { min-height: 73px; grid-template-columns: 39px minmax(0, 1fr); }
+  .preview-pokemon-tile > img { width: 39px; height: 50px; }
+  .preview-pokemon-tile > div b { font-size: 8px; }
+  .preview-pokemon-tile > div small { font-size: 5.5px; }
+}
+
+
+/* PROJECT_PREVIEWS_LIVE_ORIGINAL */
+/* Os previews são iframes dos próprios sites publicados, não ilustrações refeitas. */
+.projects-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.project-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+/* Os cards especiais anteriores deixam de ocupar uma linha inteira. */
+.project-card--casamento,
+.project-card--pokedex {
+  grid-column: auto;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  grid-template-columns: none;
+}
+
+.project-preview,
+.project-card--casamento .project-preview,
+.project-card--pokedex .project-preview {
+  min-height: 0;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.project-preview-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1440 / 1024;
+  min-height: 0;
+  overflow: hidden;
+  background: #f5f6fa;
+  isolation: isolate;
+}
+
+.project-preview-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 1440px;
+  max-width: none !important;
+  height: 1024px;
+  border: 0;
+  background: #fff;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.project-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.project-actions {
+  margin-top: auto;
+}
+
+@media (max-width: 680px) {
+  .projects-grid { grid-template-columns: 1fr; }
+  .project-card--casamento,
+  .project-card--pokedex { grid-column: auto; }
+}
+
+
+/* PROJECT_PREVIEWS_HOVER_ACTIVATION */
+/* Mantém o movimento original do card; a página incorporada só carrega no hover. */
+.project-preview { cursor: default; }
+.project-preview-stage { position: relative; cursor: pointer; }
+.project-preview-iframe { pointer-events: auto; animation: portfolio-preview-enter 260ms ease both; }
+.project-preview-poster {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  overflow: hidden;
+  place-items: center;
+  isolation: isolate;
+  background: radial-gradient(circle at 78% 18%, rgba(210,245,109,.22), transparent 35%), linear-gradient(135deg, #26372d, #111b16 72%);
+  color: #edf1e9;
+}
+.project-preview-poster > img {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: .58;
+  filter: saturate(.82);
+}
+.project-preview-poster::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(9,16,13,.82), rgba(9,16,13,.30)), linear-gradient(0deg, rgba(9,16,13,.55), transparent 75%);
+  content: '';
+}
+.project-preview-poster__copy {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  width: min(82%, 390px);
+  text-shadow: 0 2px 14px rgba(0,0,0,.25);
+}
+.project-preview-poster__copy > span {
+  color: var(--accent);
+  font: 9px/1.4 var(--mono);
+  letter-spacing: .16em;
+}
+.project-preview-poster__copy strong {
+  max-width: 100%;
+  color: #f0f4ed;
+  font-size: clamp(22px, 3vw, 36px);
+  line-height: 1.08;
+  letter-spacing: -.055em;
+}
+.project-preview-poster__copy small {
+  margin-top: 3px;
+  color: rgba(237,241,233,.82);
+  font: 9px/1.5 var(--mono);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.project-preview-poster--divertin { background-color: #7651ae; }
+.project-preview-poster--divertin::after { background: linear-gradient(90deg, rgba(75,44,120,.88), rgba(75,44,120,.20)); }
+.project-preview-poster--casamento { background-color: #916c53; }
+.project-preview-poster--casamento::after { background: linear-gradient(90deg, rgba(44,29,21,.72), rgba(44,29,21,.14)); }
+.project-preview-poster--pokedex { background-color: #5968bd; }
+.project-preview-poster--pokedex > img { object-fit: contain; width: 38%; height: 72%; inset: 14% 9% auto auto; opacity: .92; }
+.project-preview-poster--pokedex::after { background: linear-gradient(90deg, rgba(26,33,73,.88), rgba(26,33,73,.10)); }
+
+@keyframes portfolio-preview-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-preview-iframe { animation: none; }
+}
+
+
+/* PROJECT_PREVIEWS_TOUCH_FALLBACK */
+/* Mouse: preview em hover. Toque: poster + ação explícita e site em tela cheia. */
+.project-preview-stage { cursor: default; }
+.project-preview-poster { cursor: default; }
+.project-preview-desktop-hint { display: block; }
+.project-preview-touch-hint,
+.project-preview-mobile-trigger { display: none; }
+
+@media (hover: none), (pointer: coarse) {
+  /* Evita o estado :hover preso após um toque em navegadores móveis. */
+  .project-card:hover { border-color: var(--line); transform: none; }
+  .project-preview-desktop-hint { display: none !important; }
+  .project-preview-touch-hint { display: block; }
+  .project-preview-mobile-trigger {
+    position: absolute;
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    z-index: 2;
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 11px 16px;
+    border: 1px solid rgba(210,245,109,.62);
+    border-radius: 3px;
+    background: var(--accent);
+    color: #10180f;
+    font-size: 11px;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(0,0,0,.22);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .project-preview-mobile-trigger:active { transform: scale(.985); }
+  .project-preview-mobile-trigger span { font-size: 15px; }
+}
+
+.project-preview-modal {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background: #0d1512;
+  color: var(--ink);
+  overscroll-behavior: contain;
+  animation: project-preview-modal-enter 180ms ease both;
+}
+.project-preview-modal__bar {
+  position: relative;
+  z-index: 2;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 9px 18px;
+  border-bottom: 1px solid var(--line);
+  background: #101a15;
+}
+.project-preview-modal__identity { min-width: 0; display: grid; gap: 3px; }
+.project-preview-modal__eyebrow { color: var(--accent); font: 8px/1.3 var(--mono); letter-spacing: .13em; }
+.project-preview-modal__identity strong { overflow: hidden; color: var(--ink); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.project-preview-modal__actions { display: flex; flex: 0 0 auto; align-items: center; gap: 12px; }
+.project-preview-modal__actions a { color: #b9c7bd; font-size: 10px; font-weight: 700; text-decoration: none; }
+.project-preview-modal__actions a:hover { color: var(--accent); }
+.project-preview-modal__actions button {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink);
+  font: 700 10px/1 var(--sans);
+  cursor: pointer;
+}
+.project-preview-modal__actions button span { color: var(--accent); font-size: 17px; line-height: .8; }
+.project-preview-modal__frame {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  border: 0;
+  background: #fff;
+}
+@keyframes project-preview-modal-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (max-width: 480px) {
+  .project-preview-modal__bar { min-height: 58px; padding-inline: 11px; gap: 8px; }
+  .project-preview-modal__actions { gap: 8px; }
+  .project-preview-modal__actions a { max-width: 78px; font-size: 9px; line-height: 1.35; }
+  .project-preview-modal__actions button { min-height: 36px; padding-inline: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-preview-modal { animation: none; }
+  .project-preview-mobile-trigger:active { transform: none; }
+}
+
+
+.project-preview {
+  position: relative;
+  display: flex;
+  min-height: 235px;
+  flex-direction: column;
+  overflow: hidden;
+  background: #101a15;
+  isolation: isolate;
+}
+
+.project-preview .preview-browser-bar {
+  position: relative;
+  z-index: 2;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 11px;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  background: #0b120f;
+  color: #aebbb2;
+}
+
+.project-preview .preview-browser-dots,
+.project-preview-window__bar .preview-browser-dots {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+.project-preview .preview-browser-dots i,
+.project-preview-window__bar .preview-browser-dots i {
+  width: 6px;
+  height: 6px;
+  display: block;
+  border-radius: 50%;
+  background: #ef7f78;
+}
+
+.project-preview .preview-browser-dots i:nth-child(2),
+.project-preview-window__bar .preview-browser-dots i:nth-child(2) { background: #e8bd62; }
+.project-preview .preview-browser-dots i:nth-child(3),
+.project-preview-window__bar .preview-browser-dots i:nth-child(3) { background: #79bd83; }
+
+.project-preview .preview-browser-address {
+  min-width: 0;
+  overflow: hidden;
+  padding: 5px 9px;
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 3px;
+  background: rgba(255,255,255,.045);
+  color: #aebbb2;
+  font: 8px/1 var(--mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-preview .preview-browser-status {
+  margin-left: auto;
+  color: #b9d78b;
+  font: 8px/1 var(--mono);
+  letter-spacing: .08em;
+}
+
+.project-preview-poster {
+  position: relative;
+  min-height: 203px;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background: #1d3026;
+  color: #fff;
+}
+
+.project-preview-poster::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8,16,12,.88), rgba(8,16,12,.22)), linear-gradient(0deg, rgba(8,16,12,.42), transparent 65%);
+  content: '';
+}
+
+.project-preview-poster > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  opacity: .78;
+}
+
+.project-preview-poster__copy {
+  position: absolute;
+  z-index: 1;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.project-preview-poster__copy > span {
+  color: var(--accent);
+  font: 8px/1.3 var(--mono);
+  letter-spacing: .16em;
+}
+
+.project-preview-poster__copy strong {
+  max-width: 90%;
+  color: #fff;
+  font-size: clamp(20px, 2.6vw, 34px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -.055em;
+  text-shadow: 0 2px 15px rgba(0,0,0,.25);
+}
+
+.project-preview-poster__copy small {
+  color: rgba(255,255,255,.78);
+  font: 8px/1.4 var(--mono);
+  letter-spacing: .06em;
+}
+
+.project-preview-touch-hint,
+.project-preview-mobile-trigger { display: none; }
+
+.project-preview-mobile-trigger {
+  position: absolute;
+  z-index: 3;
+  right: 14px;
+  bottom: 14px;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 14px;
+  border: 1px solid rgba(210,245,109,.72);
+  border-radius: 3px;
+  background: var(--accent);
+  color: #10180f;
+  font: 800 10px/1 var(--sans);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.project-preview-mobile-trigger span { font-size: 14px; }
+.project-preview-mobile-trigger:active { transform: scale(.98); }
+
+.project-actions button.text-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.project-preview-window {
+  position: fixed;
+  z-index: 99999;
+  top: var(--preview-top);
+  left: var(--preview-left);
+  width: var(--preview-width);
+  height: var(--preview-height);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(210,245,109,.34);
+  border-radius: 4px;
+  background: #0d1512;
+  box-shadow: 0 24px 90px rgba(0,0,0,.42);
+  transition: top .46s cubic-bezier(.22,1,.36,1), left .46s cubic-bezier(.22,1,.36,1), width .46s cubic-bezier(.22,1,.36,1), height .46s cubic-bezier(.22,1,.36,1), border-radius .46s ease, box-shadow .46s ease;
+  isolation: isolate;
+}
+
+.project-preview-window.is-expanded {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.project-preview-window__bar {
+  position: relative;
+  z-index: 3;
+  min-height: 32px;
+  height: 32px;
+  display: flex;
+  flex: 0 0 32px;
+  align-items: center;
+  gap: 11px;
+  padding: 0 11px;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  background: #101a15;
+  color: #aebbb2;
+  transition: min-height .46s ease, height .46s ease, flex-basis .46s ease, padding .46s ease;
+}
+
+.project-preview-window.is-expanded .project-preview-window__bar {
+  min-height: 58px;
+  height: 58px;
+  flex-basis: 58px;
+  padding: max(8px, env(safe-area-inset-top)) 18px 8px;
+}
+
+.project-preview-window__address {
+  min-width: 0;
+  overflow: hidden;
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 3px;
+  background: rgba(255,255,255,.045);
+  color: #c1cdc4;
+  font: 9px/1 var(--mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-preview-window__status {
+  margin-left: auto;
+  color: #b9d78b;
+  font: 8px/1 var(--mono);
+  letter-spacing: .1em;
+  white-space: nowrap;
+}
+
+.project-preview-window__actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.project-preview-window__actions a,
+.project-preview-window__actions button {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 11px;
+  border: 1px solid rgba(210,245,109,.35);
+  border-radius: 3px;
+  background: transparent;
+  color: #dce7dd;
+  font: 700 9px/1 sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.project-preview-window__actions a:hover,
+.project-preview-window__actions button:hover { border-color: var(--accent); color: var(--accent); }
+.project-preview-window__actions .project-preview-window__close { border-color: var(--line-strong); }
+.project-preview-window__close span { color: var(--accent); font-size: 17px; line-height: .8; }
+
+.project-preview-window__stage {
+  position: relative;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background: #fff;
+}
+
+.project-preview-window__poster {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #14231a;
+  opacity: 1;
+  transition: opacity .32s ease;
+}
+
+.project-preview-window__poster > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .58;
+}
+
+.project-preview-window__poster::after {
+  position: absolute;
+  inset: 0;
+  background: rgba(8,16,12,.48);
+  content: '';
+}
+
+.project-preview-window__poster > div {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.project-preview-window__poster span {
+  color: var(--accent);
+  font: 9px/1.3 var(--mono);
+  letter-spacing: .18em;
+}
+
+.project-preview-window__poster strong {
+  color: #fff;
+  font-size: clamp(20px, 3vw, 38px);
+  line-height: 1.1;
+  letter-spacing: -.04em;
+}
+
+.project-preview-window__frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 1440px;
+  max-width: none !important;
+  height: 1024px;
+  border: 0;
+  background: #fff;
+  opacity: 0;
+  transform: scale(var(--preview-scale));
+  transform-origin: top left;
+  pointer-events: none;
+  transition: opacity .32s ease;
+}
+
+.project-preview-window__stage.is-loaded .project-preview-window__poster { opacity: 0; }
+.project-preview-window__stage.is-loaded .project-preview-window__frame { opacity: 1; }
+
+.project-preview-window.is-expanded .project-preview-window__frame {
+  width: 100%;
+  height: 100%;
+  transform: none;
+  pointer-events: auto;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .project-card:hover { border-color: var(--line); transform: none; }
+  .project-preview-desktop-hint { display: none !important; }
+  .project-preview-touch-hint { display: block; }
+  .project-preview-mobile-trigger { display: inline-flex; }
+}
+
+@media (max-width: 560px) {
+  .project-preview-window.is-expanded .project-preview-window__bar {
+    gap: 7px;
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+  .project-preview-window__address { padding: 6px 7px; font-size: 8px; }
+  .project-preview-window__status { display: none; }
+  .project-preview-window__actions { gap: 6px; }
+  .project-preview-window__actions a,
+  .project-preview-window__actions button { min-height: 34px; padding: 0 8px; font-size: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-preview-window,
+  .project-preview-window__bar,
+  .project-preview-window__poster,
+  .project-preview-window__frame { transition-duration: .01ms; }
+  .project-preview-mobile-trigger:active { transform: none; }
+}

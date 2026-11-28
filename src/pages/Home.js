@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
-const profilePhoto = require('../assets/images/profile2.jpg');
+const profilePhoto = require('../assets/images/profile-instagram.jpg');
 
 const navigation = [
   { label: 'Sobre', href: '#sobre' },
@@ -81,6 +82,25 @@ const projects = [
     liveUrl: 'https://jesselipe.com.br/',
     repoUrl: 'https://github.com/felipeabdo/casamento',
   },
+  {
+    id: 'pokedex',
+    number: '04',
+    category: 'Aplicação web · Consumo de API',
+    title: 'Pokédex — Explorador Pokémon',
+    description:
+      'Um projeto de estudos que evoluiu para uma experiência completa de exploração do universo Pokémon. Desenvolvido com HTML, CSS e JavaScript puro, consumindo dados da PokéAPI.',
+    highlights: [
+      'Catálogo paginado, busca por nome ou número e filtros combináveis por geração e tipos',
+      'Favoritos no navegador e fichas com atributos, habilidades, vantagens por tipo e evoluções',
+      'Galeria de artes e sprites, choros, movimentos detalhados e registros de jogos e encontros',
+    ],
+    stack: ['HTML5', 'CSS3', 'JavaScript', 'PokéAPI REST', 'Fetch API', 'localStorage'],
+    theme: 'pokedex',
+    previewImage: 'https://js-developer-pokedex-rouge.vercel.app/assets/img/pokeball.svg',
+    previewUrl: 'js-developer-pokedex-rouge.vercel.app',
+    liveUrl: 'https://js-developer-pokedex-rouge.vercel.app/',
+    repoUrl: 'https://github.com/felipeabdo/js-developer-pokedex',
+  },
 ];
 
 const skillGroups = [
@@ -141,80 +161,83 @@ function SectionHeading({ eyebrow, title, note }) {
   );
 }
 
-function ProjectCard({ project }) {
+const PROJECT_PREVIEWS_FLUID = true;
+const PREVIEW_VIEWPORT_WIDTH = 1440;
+const PREVIEW_VIEWPORT_HEIGHT = 1024;
+
+function supportsHoverPreview() {
+  return typeof window !== 'undefined'
+    && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+}
+
+function ProjectLivePreview({ project, activePreviewId, previewRef, onOpenPreview }) {
+  const isActive = activePreviewId === project.id;
+  const address = project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+  const openPreview = () => onOpenPreview(project, previewRef.current, true);
+
   return (
-    <article className={`project-card project-card--${project.theme}`}>
-      <div
-        className={`project-preview project-preview--${project.theme}`}
-        role="img"
-        aria-label={`Prévia visual do site ${project.previewUrl}`}
-      >
-        <div className="preview-browser-bar" aria-hidden="true">
-          <div className="preview-browser-dots"><i /><i /><i /></div>
-          <span className="preview-browser-address">{project.previewUrl}</span>
-          <span className="preview-browser-status">LIVE</span>
-        </div>
-
-        <div className={`preview-stage preview-stage--${project.theme}`}>
-          <img
-            className="preview-image"
-            src={project.previewImage}
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            decoding="async"
-          />
-
-          {project.id === 'bsp' ? (
-            <>
-              <div className="preview-bsp-copy">
-                <span className="preview-bsp-eyebrow">EU CURTO BLOCO DE RUA!</span>
-                <strong className="preview-bsp-name">Bloco <em>Santo Pecado</em></strong>
-                <span className="preview-bsp-meta">BRASÍLIA · SAMBA-REGGAE · DESDE 2013</span>
-                <div className="preview-mini-actions">
-                  <span>EVENTOS</span><span>OFICINA BSP</span>
-                </div>
-              </div>
-              <div className="preview-bsp-seal" aria-hidden="true"><span>✳</span><small>BSB<br />2013</small></div>
-            </>
-          ) : null}
-
-          {project.id === 'divertin' ? (
-            <div className="preview-divertin-copy">
-              <img className="preview-divertin-logo" src={project.previewLogo} alt="" />
-              <span className="preview-divertin-specialty">TERAPIA INFANTIL</span>
-              <strong>Diversa em cuidado,<br />única em conexão.</strong>
-              <small>Comunicação · Linguagem · Desenvolvimento</small>
-            </div>
-          ) : null}
-
-          {project.id === 'casamento' ? (
-            <>
-              <div className="preview-wedding-brand">
-                <span className="preview-wedding-monogram">JF</span>
-                <small>JÉSSICA &amp; FELIPE</small>
-              </div>
-              <div className="preview-wedding-copy">
-                <span>COM ALEGRIA, CONVIDAMOS</span>
-                <strong>Jéssica <i>&amp;</i> Felipe</strong>
-                <small>SAVE THE DATE · 02.08.2026</small>
-              </div>
-              <div className="preview-wedding-footer">NOSSA HISTÓRIA, AGORA CELEBRADA COM VOCÊ</div>
-            </>
-          ) : null}
-        </div>
-
-        {project.id === 'bsp' ? (
-          <div className="preview-bsp-marquee" aria-hidden="true">
-            <span>EU CURTO BLOCO DE RUA ✳ TOMATE ✳ É O TCHAN ✳ HARMONIA DO SAMBA ✳ ARA KETU ✳ MOLEJO ✳ SAULO ✳&nbsp;&nbsp;&nbsp;</span>
-          </div>
-        ) : null}
+    <div
+      className={`project-preview project-preview--${project.theme}`}
+      ref={previewRef}
+      onMouseEnter={() => {
+        if (supportsHoverPreview()) onOpenPreview(project, previewRef.current, false);
+      }}
+      aria-label={`Prévia interativa de ${project.title}`}
+    >
+      <div className="preview-browser-bar" aria-hidden="true">
+        <div className="preview-browser-dots"><i /><i /><i /></div>
+        <span className="preview-browser-address">{address}</span>
+        <span className="preview-browser-status">{isActive ? 'AO VIVO' : 'PREVIEW'}</span>
       </div>
+
+      <div className={`project-preview-poster project-preview-poster--${project.theme}`}>
+        {project.previewImage ? (
+          <img src={project.previewImage} alt="" loading="lazy" decoding="async" />
+        ) : null}
+        <div className="project-preview-poster__copy">
+          <span>PROJETO INTERATIVO</span>
+          <strong>{project.title}</strong>
+          <small className="project-preview-desktop-hint">Passe o mouse para experimentar</small>
+          <small className="project-preview-touch-hint">Toque para abrir em tela cheia</small>
+        </div>
+        <button
+          className="project-preview-mobile-trigger"
+          type="button"
+          onClick={openPreview}
+          aria-label={`Abrir ${project.title} em tela cheia`}
+        >
+          Experimentar projeto <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ProjectCard({ project, activePreviewId, onOpenPreview, onClosePreview }) {
+  const previewRef = useRef(null);
+
+  return (
+    <article
+      className={`project-card project-card--${project.theme}`}
+      onMouseLeave={(event) => {
+        if (activePreviewId !== project.id) return;
+        const target = event.relatedTarget;
+        if (target && target.closest && target.closest('.project-preview-window')) return;
+        onClosePreview(project.id);
+      }}
+    >
+      <ProjectLivePreview
+        project={project}
+        activePreviewId={activePreviewId}
+        previewRef={previewRef}
+        onOpenPreview={onOpenPreview}
+      />
 
       <div className="project-content">
         <div className="project-overline">
           <span>{project.category}</span>
-          <span className="project-number">{project.number} / 03</span>
+          <span className="project-number">{project.number} / 04</span>
         </div>
         <h3>{project.title}</h3>
         <p className="project-description">{project.description}</p>
@@ -230,11 +253,13 @@ function ProjectCard({ project }) {
         </div>
 
         <div className="project-actions">
-          {project.liveUrl ? (
-            <a className="text-link text-link--primary" href={project.liveUrl} target="_blank" rel="noreferrer">
-              Acessar projeto <span aria-hidden="true">↗</span>
-            </a>
-          ) : null}
+          <button
+            className="text-link text-link--primary"
+            type="button"
+            onClick={() => onOpenPreview(project, previewRef.current, true)}
+          >
+            Acessar projeto <span aria-hidden="true">↗</span>
+          </button>
           <a className="text-link" href={project.repoUrl} target="_blank" rel="noreferrer">
             Código no GitHub <span aria-hidden="true">↗</span>
           </a>
@@ -244,8 +269,154 @@ function ProjectCard({ project }) {
   );
 }
 
+function ProjectPreviewWindow({ preview, onDismiss }) {
+  const [expanded, setExpanded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const finishedRef = useRef(false);
+  const address = preview.project.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const scale = Math.min(preview.origin.width / PREVIEW_VIEWPORT_WIDTH, 1);
+  const windowStyle = {
+    '--preview-top': `${preview.origin.top}px`,
+    '--preview-left': `${preview.origin.left}px`,
+    '--preview-width': `${preview.origin.width}px`,
+    '--preview-height': `${preview.origin.height}px`,
+    '--preview-scale': scale,
+  };
+
+  const closeWindow = () => {
+    setClosing(true);
+    setExpanded(false);
+  };
+
+  const finishClose = () => {
+    if (finishedRef.current) return;
+    finishedRef.current = true;
+    onDismiss();
+  };
+
+  useEffect(() => {
+    if (!preview.expand) return undefined;
+    let firstFrame = 0;
+    let secondFrame = 0;
+    firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => setExpanded(true));
+    });
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+    };
+  }, [preview.expand]);
+
+  useEffect(() => {
+    if (!expanded && !closing) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setClosing(true);
+        setExpanded(false);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [expanded, closing]);
+
+  useEffect(() => {
+    if (!closing) return undefined;
+    const timer = window.setTimeout(() => {
+      if (finishedRef.current) return;
+      finishedRef.current = true;
+      onDismiss();
+    }, 520);
+    return () => window.clearTimeout(timer);
+  }, [closing, onDismiss]);
+
+  return createPortal(
+    <div
+      className={`project-preview-window${expanded ? ' is-expanded' : ''}${closing ? ' is-closing' : ''}`}
+      style={windowStyle}
+      role={expanded ? 'dialog' : undefined}
+      aria-modal={expanded ? 'true' : undefined}
+      aria-labelledby={`project-preview-title-${preview.project.id}`}
+      onMouseLeave={(event) => {
+        const target = event.relatedTarget;
+        const remainsInsideCard = target && preview.card && preview.card.contains(target);
+        if (!expanded && !closing && !remainsInsideCard) onDismiss();
+      }}
+      onTransitionEnd={(event) => {
+        if (closing && event.target === event.currentTarget && event.propertyName === 'width') finishClose();
+      }}
+    >
+      <div className="project-preview-window__bar">
+        <div className="preview-browser-dots"><i /><i /><i /></div>
+        <span className="project-preview-window__address">https://{address}</span>
+        <span className="project-preview-window__status">{expanded ? 'SITE AO VIVO' : 'LIVE'}</span>
+        <div className="project-preview-window__actions">
+          {expanded ? (
+            <a href={preview.project.liveUrl} target="_blank" rel="noreferrer">Nova aba ↗</a>
+          ) : (
+            <button type="button" onClick={() => setExpanded(true)}>Expandir ↗</button>
+          )}
+          {expanded ? (
+            <button className="project-preview-window__close" type="button" onClick={closeWindow} aria-label="Fechar projeto">
+              Fechar <span aria-hidden="true">×</span>
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      <div className={`project-preview-window__stage${loaded ? ' is-loaded' : ''}`}>
+        <div className="project-preview-window__poster" aria-hidden="true">
+          {preview.project.previewImage ? <img src={preview.project.previewImage} alt="" /> : null}
+          <div>
+            <span>ABRINDO EXPERIÊNCIA</span>
+            <strong id={`project-preview-title-${preview.project.id}`}>{preview.project.title}</strong>
+          </div>
+        </div>
+        <iframe
+          className={`project-preview-window__frame${loaded ? ' is-loaded' : ''}`}
+          src={preview.project.liveUrl}
+          title={`Projeto ${preview.project.title}`}
+          width={PREVIEW_VIEWPORT_WIDTH}
+          height={PREVIEW_VIEWPORT_HEIGHT}
+          loading="eager"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allow="autoplay; fullscreen"
+          onLoad={() => setLoaded(true)}
+        />
+      </div>
+    </div>,
+    document.body
+  );
+}
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const activePreviewId = preview ? preview.project.id : null;
+  const openPreview = (project, element, expand = false) => {
+    if (!element) return;
+    const rect = element.getBoundingClientRect();
+    setPreview({
+      project,
+      origin: {
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+      },
+      card: element.closest('.project-card'),
+      expand,
+    });
+  };
+  const closePreview = (projectId) => {
+    setPreview((current) => (
+      current && current.project.id === projectId ? null : current
+    ));
+  };
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -336,7 +507,15 @@ function Home() {
           <div className="page-shell">
             <SectionHeading eyebrow="02 / TRABALHOS SELECIONADOS" title={<>Projetos que saíram<br /><em>da ideia para a prática.</em></>} note="Aplicações e sites publicados, com diferentes contextos, desafios e escolhas técnicas." />
             <div className="projects-grid">
-              {projects.map((project) => <ProjectCard key={project.id} project={project} />)}
+              {projects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  activePreviewId={activePreviewId}
+                  onOpenPreview={openPreview}
+                  onClosePreview={closePreview}
+                />
+              ))}
             </div>
             <div className="github-more">
               <span>Quer ver outros experimentos e acompanhar minha evolução?</span>
@@ -430,6 +609,14 @@ function Home() {
           <span>© {new Date().getFullYear()} · Todos os direitos reservados</span>
         </div>
       </footer>
+      {preview ? (
+        <ProjectPreviewWindow
+          key={preview.project.id}
+          preview={preview}
+          onDismiss={() => closePreview(preview.project.id)}
+        />
+      ) : null}
+
     </div>
   );
 }
